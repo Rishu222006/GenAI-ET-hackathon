@@ -21,6 +21,8 @@ exports.analyzeRepo = async (req, res) => {
             const securityIssues = runSecurityChecks(content);
             const aiReview = await geminiReview(content);
 
+            const allIssues = [...ruleIssues, ...securityIssues];
+
             const fileResult = {
                 file: name,
                 issues: [...ruleIssues, ...securityIssues],
@@ -31,13 +33,23 @@ exports.analyzeRepo = async (req, res) => {
             results.push(fileResult);
         }
 
-        res.json({
-            summary: {
-                totalFiles: results.length,
-                totalIssues: results.reduce((acc, f) => acc + f.issues.length, 0)
-            },
-            files: results
+        const summary = {
+            totalFiles: results.length,
+            totalIssues: 0,
+            high: 0,
+            medium: 0,
+            low: 0
+        };
+
+        results.forEach(f => {
+            f.issues.forEach(issue => {
+                summary.totalIssues++;
+                summary[issue.severity.toLowerCase()]++;
+            });
         });
+
+
+        res.json({ summary, files: results });
 
     } catch (err) {
         console.error(err);

@@ -5,7 +5,8 @@ module.exports = (code) => {
         issues.push({
             type: "SECURITY",
             severity: "HIGH",
-            message: "Use of eval is dangerous"
+            message: "Use of eval is dangerous",
+            fix: "Avoid eval; use safer alternatives"
         });
     }
 
@@ -13,7 +14,8 @@ module.exports = (code) => {
         issues.push({
             type: "SECURITY",
             severity: "HIGH",
-            message: "Possible hardcoded secret detected"
+            message: "Possible hardcoded secret detected",
+            fix: "Avoid eval; use safer alternatives"
         });
     }
 
