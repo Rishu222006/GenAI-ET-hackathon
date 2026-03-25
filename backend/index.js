@@ -3,12 +3,13 @@ const express = require("express");
 const cors = require("cors");
 
 const analyzeRoute = require("./routes/analyze.route");
-
+const uploadRoute = require("./routes/upload.route");
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use("/analyze", analyzeRoute);
+app.use("/api/upload", uploadRoute);
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,44 +1,97 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, CircularProgress } from "@mui/material";
-import { uploadRepo } from "../api/api";
 
-interface RepoUploadProps {
-    onUploaded: (repoId: string) => void;
-}
-
-const RepoUpload: React.FC<RepoUploadProps> = ({ onUploaded }) => {
+export default function TestUpload() {
     const [file, setFile] = useState<File | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [code, setCode] = useState("");
+    const [url, setUrl] = useState("");
 
-    const handleUpload = async () => {
-        if (!file) return alert("Select a repo zip file first!");
-        setLoading(true);
+    // ZIP upload
+    const handleZipUpload = async () => {
+        if (!file) return alert("Select file");
 
-        try {
-            const data = await uploadRepo(file);
-            onUploaded(data.repoId);
-        } catch (err) {
-            console.error(err);
-            alert("Upload failed!");
-        } finally {
-            setLoading(false);
-        }
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("http://localhost:5000/api/upload/zip", {
+            method: "POST",
+            body: formData,
+        });
+
+        const data = await res.json();
+        console.log(data);
+        alert("ZIP uploaded: " + data.repoId);
+    };
+
+    // Code upload
+    const handleCodeUpload = async () => {
+        const res = await fetch("http://localhost:5000/api/upload/code", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+        });
+
+        const data = await res.json();
+        console.log(data);
+        alert("Code uploaded: " + data.repoId);
+    };
+
+    // URL upload
+    const handleUrlUpload = async () => {
+        const res = await fetch("http://localhost:5000/api/upload/url", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ url }),
+        });
+
+        const data = await res.json();
+        console.log(data);
+        alert("URL uploaded: " + data.repoId);
     };
 
     return (
-        <div>
-            <input
-                type="file"
-                accept=".zip"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-            />
-            <Button variant="contained" onClick={handleUpload} disabled={loading}>
-                {loading ? <CircularProgress size={24} /> : "Upload Repo"}
-            </Button>
+        <div style={{ padding: 20 }}>
+            <h2>Test Backend APIs</h2>
+
+            {/* ZIP */}
+            <div style={{ marginBottom: 20 }}>
+                <h3>Upload ZIP</h3>
+                <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+                <br />
+                <button onClick={handleZipUpload}>Upload ZIP</button>
+            </div>
+
+            {/* CODE */}
+            <div style={{ marginBottom: 20 }}>
+                <h3>Paste Code</h3>
+                <textarea
+                    rows={6}
+                    cols={50}
+                    placeholder="Paste code here"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                />
+                <br />
+                <button onClick={handleCodeUpload}>Upload Code</button>
+            </div>
+
+            {/* URL */}
+            <div style={{ marginBottom: 20 }}>
+                <h3>Repo URL</h3>
+                <input
+                    type="text"
+                    placeholder="https://github.com/user/repo"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                />
+                <br />
+                <button onClick={handleUrlUpload}>Upload URL</button>
+            </div>
         </div>
     );
-};
-
-export default RepoUpload;
+}

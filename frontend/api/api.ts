@@ -12,6 +12,26 @@ export const uploadRepo = async (file: File) => {
     return response.data;
 };
 
+export const uploadCode = (code: string) => {
+    return fetch("/api/upload/code", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+    }).then(res => res.json());
+};
+
+export const uploadRepoUrl = (url: string) => {
+    return fetch("/api/upload/url", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
+    }).then(res => res.json());
+};
+
 export const getAnalysis = async (repoId: string) => {
     const response = await axios.get(`${API_BASE}/analysis/${repoId}`);
     return response.data;
