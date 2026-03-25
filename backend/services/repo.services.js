@@ -28,13 +28,13 @@ exports.fetchRepoFiles = async (repoUrl) => {
 
         const filteredFiles = filterFiles(files);
 
-// 🔥 NEW FEATURE: analyze + generate tasks
+
 const tasks = await analyzeFiles(filteredFiles);
 
-// store tasks
+
 addTasks(tasks);
 
-// audit log
+
 addLog({
     action: "TASK_GENERATION",
     count: tasks.length,
