@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -49,6 +51,21 @@ const METRICS: Metric[] = [
   { label: "Error Rate",    value: "2.3%",   sub: "Current Errors",  trend: [18,15,12,10,8,6,5,4,3,2], color: "#F56C6C" },
   { label: "Avg Response",  value: "320 ms", sub: "Avg Response",    trend: [210,220,215,230,225,218,222,226,219,220], color: "#5AC8A0" },
 ];
+
+const BACKEND_URL = "http://localhost:5000";
+
+async function postJson(endpoint: string, body: any) {
+  const res = await fetch(`${BACKEND_URL}${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || data.message || "Backend request failed");
+  }
+  return data;
+}
 
 // ── Tiny SVG sparkline ────────────────────────────────────────────────────────
 function Sparkline({ data, color, filled }: { data: number[]; color: string; filled?: boolean }) {
@@ -117,11 +134,22 @@ function AddRepoModal({ onClose }: { onClose: () => void }) {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!url.trim()) return;
     setLoading(true);
-    setTimeout(() => { setLoading(false); setDone(true); setTimeout(onClose, 1200); }, 1800);
+    setError(null);
+
+    try {
+      await postJson("/api/upload/url", { url: url.trim() });
+      setDone(true);
+      setTimeout(onClose, 1200);
+    } catch (err: any) {
+      setError(err.message || "Unable to add repository");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -155,6 +183,9 @@ function AddRepoModal({ onClose }: { onClose: () => void }) {
                 </label>
               ))}
             </div>
+            {error && (
+              <div style={{ marginTop: 12, color: "#F56C6C", fontSize: 13 }}>{error}</div>
+            )}
             <button
               onClick={handleAdd}
               disabled={loading || !url.trim()}
@@ -172,7 +203,31 @@ function AddRepoModal({ onClose }: { onClose: () => void }) {
 // ── Analyze Modal ─────────────────────────────────────────────────────────────
 function AnalyzeModal({ repo, onClose }: { repo: Repo | null; onClose: () => void }) {
   const [step, setStep] = useState(0);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   const steps = ["Fetching source…", "Running Code Analyzer…", "Running Bug Detector…", "Generating report…"];
+
+  useEffect(() => {
+    if (!repo) return;
+    let active = true;
+    const repoUrl = `https://github.com/${repo.owner}/${repo.name}`;
+
+    const runPipeline = async () => {
+      try {
+        const data = await postJson("/agents/run", { repoUrl });
+        if (active) {
+          setResult(data);
+        }
+      } catch (err: any) {
+        if (active) {
+          setError(err.message || "Pipeline failed");
+        }
+      }
+    };
+
+    runPipeline();
+    return () => { active = false; };
+  }, [repo]);
 
   useEffect(() => {
     if (step < steps.length) {
@@ -208,7 +263,13 @@ function AnalyzeModal({ repo, onClose }: { repo: Repo | null; onClose: () => voi
           <div style={{ marginTop: 24, padding: 16, background: "#F0FDF8", borderRadius: 12, border: "1px solid #5AC8A0" }}>
             <div style={{ fontWeight: 700, color: "#5AC8A0", marginBottom: 8 }}>Analysis Complete ✓</div>
             <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.6 }}>
-              Score: <strong>87/100</strong> · Issues found: <strong>3</strong> · Suggestions: <strong>12</strong>
+              {error ? (
+                <span style={{ color: "#F56C6C" }}>{error}</span>
+              ) : result ? (
+                <>Pipeline completed with <strong>{Array.isArray(result.tasks) ? result.tasks.length : "0"}</strong> results.</>
+              ) : (
+                <>Score: <strong>87/100</strong> · Issues found: <strong>3</strong> · Suggestions: <strong>12</strong></>
+              )}
             </div>
             <button onClick={onClose} style={{ ...btnPrimary, marginTop: 12, padding: "8px 20px", fontSize: 13 }}>View Report</button>
           </div>
