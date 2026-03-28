@@ -12,4 +12,12 @@ const addLog = (entry) => {
     });
 };
 
-module.exports = { addLog };
+const getLogs = () => {
+    return logs;
+};
+
+const clearLogs = () => {
+    logs.length = 0;
+};
+
+module.exports = { addLog, getLogs, clearLogs };

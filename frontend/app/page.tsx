@@ -1,61 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import {
+  UploadAPI,
+  AnalyzeAPI,
+  AgentsAPI,
+  TaskAPI,
+  MonitorAPI,
+  type Task,
+  type MonitorReport
+} from "@/lib/api";
 
 export default function GenAIFrontend() {
   const [tab, setTab] = useState("upload");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [code, setCode] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any>(null);
   const [activeEndpoint, setActiveEndpoint] = useState("");
 
-  const BACKEND_URL = "http://localhost:5000";
-
   const handleRequest = async (
-    endpoint,
-    payload = {},
-    isFile = false,
-    fieldName = "file",
-    method = "POST"
+    apiCall: () => Promise<any>,
+    endpoint: string
   ) => {
     setLoading(true);
     setResult(null);
     setActiveEndpoint(endpoint);
 
     try {
-      let options = { method };
-
-      if (method !== "GET") {
-        if (isFile) {
-          const formData = new FormData();
-          formData.append(fieldName, payload);
-          options.body = formData;
-        } else {
-          options.headers = { "Content-Type": "application/json" };
-          options.body = JSON.stringify(payload);
-        }
-      }
-
-      const res = await fetch(`${BACKEND_URL}${endpoint}`, options);
-
-      const contentType = res.headers.get("content-type");
-
-      let data;
-
-      if (contentType && contentType.includes("application/json")) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        console.error("Non-JSON response:", text);
-        data = { error: "Invalid JSON response", raw: text };
-      }
-
+      const data = await apiCall();
       setResult(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setResult({ error: "Request failed" });
+      setResult({ error: err.message || "Request failed" });
     }
 
     setLoading(false);
@@ -70,7 +48,7 @@ export default function GenAIFrontend() {
         {["upload", "analyze", "agents", "monitor", "tasks"].map((t) => (
           <button
             key={t}
-            onClick={() => setTab(t)}
+            onClick={() => setTab(t as any)}
             style={{
               marginRight: 10,
               background: tab === t ? "#3498db" : "#eee",
@@ -90,10 +68,10 @@ export default function GenAIFrontend() {
       {tab === "upload" && (
         <div>
           <h2>Upload File</h2>
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+          <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           <button
             onClick={() =>
-              handleRequest("/api/upload/files", file, true)
+              file && handleRequest(() => UploadAPI.uploadFile(file), "/api/upload/files")
             }
             disabled={loading || !file}
           >
@@ -110,7 +88,7 @@ export default function GenAIFrontend() {
           <br />
           <button
             onClick={() =>
-              handleRequest("/api/upload/code", { code })
+              handleRequest(() => UploadAPI.uploadCode(code), "/api/upload/code")
             }
             disabled={loading || !code}
           >
@@ -126,7 +104,7 @@ export default function GenAIFrontend() {
           />
           <button
             onClick={() =>
-              handleRequest("/api/upload/url", { url: repoUrl })
+              handleRequest(() => UploadAPI.uploadUrl(repoUrl), "/api/upload/url")
             }
             disabled={loading || !repoUrl}
           >
@@ -134,21 +112,21 @@ export default function GenAIFrontend() {
           </button>
         </div>
       )}
-
       {/* Analyze */}
       {tab === "analyze" && (
         <div>
-          <h2>Analyze</h2>
+          <h2>Analyze Code</h2>
           <textarea
             rows={5}
             cols={40}
             value={code}
             onChange={(e) => setCode(e.target.value)}
+            placeholder="Paste your code here..."
           />
           <br />
           <button
             onClick={() =>
-              handleRequest("/analyze", { code })
+              handleRequest(() => AnalyzeAPI.analyzeCode(code), "/analyze")
             }
             disabled={loading || !code}
           >
@@ -160,10 +138,17 @@ export default function GenAIFrontend() {
       {/* Agents */}
       {tab === "agents" && (
         <div>
-          <h2>Run Agents</h2>
+          <h2>Run Multi-Agent Pipeline</h2>
+          <input
+            type="text"
+            placeholder="https://github.com/user/repo"
+            value={repoUrl}
+            onChange={(e) => setRepoUrl(e.target.value)}
+            style={{ width: "100%", padding: 8, marginBottom: 10 }}
+          />
           <button
             onClick={() =>
-              handleRequest("/agents/run", { repoUrl })
+              handleRequest(() => AgentsAPI.runPipeline(repoUrl), "/agents/run")
             }
             disabled={loading || !repoUrl}
           >
@@ -172,13 +157,13 @@ export default function GenAIFrontend() {
         </div>
       )}
 
-      {/* Monitor (GET) */}
+      {/* Monitor */}
       {tab === "monitor" && (
         <div>
-          <h2>Monitor</h2>
+          <h2>System Monitoring</h2>
           <button
             onClick={() =>
-              handleRequest("/monitor", {}, false, "file", "GET")
+              handleRequest(() => MonitorAPI.getMonitoringData(), "/monitor")
             }
             disabled={loading}
           >
@@ -187,13 +172,13 @@ export default function GenAIFrontend() {
         </div>
       )}
 
-      {/* Tasks (GET) */}
+      {/* Tasks */}
       {tab === "tasks" && (
         <div>
-          <h2>Tasks</h2>
+          <h2>Task Status</h2>
           <button
             onClick={() =>
-              handleRequest("/tasks", {}, false, "file", "GET")
+              handleRequest(() => TaskAPI.getTasks(), "/tasks")
             }
             disabled={loading}
           >

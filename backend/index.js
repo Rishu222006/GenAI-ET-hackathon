@@ -13,6 +13,7 @@ app.use("/api/upload", uploadRoute);
 app.use("/tasks", require("./routes/task.route"));
 app.use("/agents", require("./routes/agent.route"));
 app.use("/monitor", require("./routes/monitor.route"));
+app.use("/audit", require("./routes/audit.route"));
 
 const PORT = process.env.PORT || 5000;
 
