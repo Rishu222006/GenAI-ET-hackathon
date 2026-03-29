@@ -152,6 +152,30 @@ const ResponseCard: React.FC<{ data: any }> = ({ data }) => {
         </div>
       )}
 
+      {/* Monitoring Report */}
+      {data.report && (
+        <div style={styles.statusSection}>
+          <h3 style={styles.sectionHeading}>📡 Monitoring Report</h3>
+          {data.report.summary && (
+            <div>
+              <p style={styles.statusLine}>Total tasks: {data.report.summary.total}</p>
+              <p style={styles.statusLine}>Stalled: {data.report.summary.stalled}</p>
+              <p style={styles.statusLine}>High risk: {data.report.summary.highRisk}</p>
+              <p style={styles.statusLine}>SLA risk: {data.report.summary.slaRisk}</p>
+            </div>
+          )}
+          {data.report.stalled && data.report.stalled.length > 0 && (
+            <p style={styles.statusText}>Stalled tasks: {data.report.stalled.length}</p>
+          )}
+          {data.report.highRisk && data.report.highRisk.length > 0 && (
+            <p style={styles.statusText}>High-risk tasks: {data.report.highRisk.length}</p>
+          )}
+          {data.report.slaRisk && data.report.slaRisk.length > 0 && (
+            <p style={styles.statusText}>SLA-risk tasks: {data.report.slaRisk.length}</p>
+          )}
+        </div>
+      )}
+
       {/* Tasks List (Agents results) */}
       {data.tasks && Array.isArray(data.tasks) && data.tasks.length > 0 && (
         <div style={styles.tasksSection}>

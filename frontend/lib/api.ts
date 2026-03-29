@@ -86,9 +86,8 @@ async function uploadFile(endpoint: string, file: File): Promise<any> {
 
 // ── Task APIs ──
 export const TaskAPI = {
-    getTasks: async (): Promise<Task[]> => {
-        const data = await apiCall<{ tasks?: Task[] }>("GET", "/tasks");
-        return data.tasks || [];
+    getTasks: async (): Promise<{ success: boolean; summary?: string; overallStatus?: any; tasks?: Task[] }> => {
+        return apiCall<{ success: boolean; summary?: string; overallStatus?: any; tasks?: Task[] }>("GET", "/tasks");
     },
 };
 
