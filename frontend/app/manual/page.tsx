@@ -152,6 +152,30 @@ const ResponseCard: React.FC<{ data: any }> = ({ data }) => {
         </div>
       )}
 
+      {/* Tasks List (Agents results) */}
+      {data.tasks && Array.isArray(data.tasks) && data.tasks.length > 0 && (
+        <div style={styles.tasksSection}>
+          <h3 style={styles.sectionHeading}>🧾 Agent Tasks ({data.tasks.length})</h3>
+          <div style={styles.taskList}>
+            {data.tasks.map((task: any, idx: number) => (
+              <div key={idx} style={styles.taskItem}>
+                <p style={styles.taskTitle}>
+                  <strong>{idx + 1}.</strong> {task.title || task.message || "Unnamed task"}
+                </p>
+                <p style={styles.taskMeta}>
+                  {task.file && <>File: {task.file}</>}
+                  {task.line && <> | Line: {task.line}</>}
+                  {task.priority && <> | Priority: {task.priority}</>}
+                  {task.status && <> | Status: {task.status}</>}
+                </p>
+                {task.executionPlan && <p style={styles.taskPlan}>{task.executionPlan}</p>}
+                {task.decision && <p style={styles.taskPlan}>Decision: {task.decision}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Analysis Details (if different structure) */}
       {data.analysis && !data.summary && (
         <div style={styles.analysisSection}>
@@ -1025,6 +1049,35 @@ const styles = {
     color: "#555",
     margin: "8px 0",
     lineHeight: "1.6",
+  } as React.CSSProperties,
+  tasksSection: {
+    marginBottom: "28px",
+  } as React.CSSProperties,
+  taskList: {
+    display: "grid",
+    gap: "10px",
+  } as React.CSSProperties,
+  taskItem: {
+    padding: "12px",
+    border: "1px solid #e0e0e0",
+    borderRadius: "8px",
+    background: "#fff",
+  } as React.CSSProperties,
+  taskTitle: {
+    fontSize: "14px",
+    color: "#333",
+    margin: "0 0 8px 0",
+    fontWeight: "700",
+  } as React.CSSProperties,
+  taskMeta: {
+    fontSize: "12px",
+    color: "#555",
+    margin: "0 0 6px 0",
+  } as React.CSSProperties,
+  taskPlan: {
+    fontSize: "13px",
+    color: "#444",
+    margin: "0",
   } as React.CSSProperties,
   errorCard: {
     background: "#ffebee",
