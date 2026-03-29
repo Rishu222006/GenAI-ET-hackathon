@@ -9,7 +9,14 @@ exports.monitorWorkflow = (req, res) => {
 
         res.json({
             success: true,
-            report
+            summary: "System monitoring summary",
+            overallStatus: {
+                totalTasks: report.summary.total,
+                stalledTasks: report.summary.stalled,
+                highRiskTasks: report.summary.highRisk,
+                slaRiskTasks: report.summary.slaRisk,
+            },
+            report,
         });
 
     } catch (err) {
