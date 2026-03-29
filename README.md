@@ -394,6 +394,6 @@ Manual: 0-1 (optional GitHub webhook config)
 
 <div align="center">
 
-### Built with ❤️ for the GenAI Hackathon by Team ** SLYTHERIN **
+### Built with ❤️ for the GenAI Hackathon by Team **SLYTHERIN**
 
 </div>
