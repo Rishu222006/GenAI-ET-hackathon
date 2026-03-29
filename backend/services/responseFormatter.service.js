@@ -24,10 +24,17 @@ function extractTextFromGeminiResponse(geminiResponse) {
 
 function parseAnalysisText(text) {
     try {
-        // Try to parse as JSON first
-        const parsed = JSON.parse(text);
+        // Remove "json" prefix if it exists
+        let cleanedText = text.replace(/^json\s*/i, "").trim();
+
+        // Remove markdown code blocks (```json ... ```)
+        cleanedText = cleanedText.replace(/^```(json)?\n?/i, "").replace(/\n?```$/i, "").trim();
+
+        // Try to parse as JSON
+        const parsed = JSON.parse(cleanedText);
         return parsed;
     } catch (e) {
+        console.error("JSON parse error:", e.message, "Text:", text.substring(0, 100));
         // If not JSON, return the text as is
         return { summary: text };
     }
@@ -35,7 +42,7 @@ function parseAnalysisText(text) {
 
 function formatAnalysisResponse(geminiResponse) {
     const text = extractTextFromGeminiResponse(geminiResponse);
-    
+
     if (!text) {
         return {
             status: "error",
@@ -57,7 +64,7 @@ function formatAnalysisResponse(geminiResponse) {
 
 function formatSecurityResponse(geminiResponse) {
     const text = extractTextFromGeminiResponse(geminiResponse);
-    
+
     if (!text) {
         return {
             status: "error",
