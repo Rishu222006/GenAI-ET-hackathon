@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 GenAI Enterprise Toolkit — Fully Autonomous Multi-Agent System
+# 🤖 GenAI Enterprise Toolkit — Autonomous Multi-Agent System
 
 ### *Self-Healing AI Agents That Detect, Fix & Deploy , Zero Human Intervention*
 
@@ -12,7 +12,7 @@
 
 ---
 
-*A fully autonomous multi-agent system that takes ownership of complex, multi-step enterprise code review and remediation processes — detecting failures, self-correcting, executing fixes, and deploying changes with 95%+ autonomy while maintaining an auditable trail of every decision it makes.*
+*An autonomous multi-agent system that takes ownership of complex, multi-step enterprise code review and remediation processes — detecting failures, self-correcting, executing fixes, and deploying changes with 95%+ autonomy while maintaining an auditable trail of every decision it makes.*
 
 </div>
 
@@ -49,7 +49,7 @@ We were challenged to build one of the following:
 
 ## 💡 Our Solution
 
-We built a **Fully Autonomous Multi-Agent AI Code Intelligence & Remediation Platform** — an enterprise-grade system where **six specialized AI agents** collaborate autonomously to analyze codebases, detect vulnerabilities, prioritize issues, **generate and apply fixes**, and verify solutions — all without human intervention. Plus, it **automatically commits and pushes** changes back to your repository.
+We built an **Autonomous Multi-Agent AI Code Intelligence & Remediation Platform** — an enterprise-grade system where **six specialized AI agents** collaborate autonomously to analyze codebases, detect vulnerabilities, prioritize issues, **generate and apply fixes**, and verify solutions — all without human intervention. Plus, it **automatically commits and pushes** changes back to your repository.
 
 Think of it as a **self-healing code review system** where:
 - 🔍 **Retriever Agent** fetches your code
@@ -82,8 +82,8 @@ Our system is powered by **six specialized agents**, each with a distinct role i
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        USER DASHBOARD                              │
-│              (Repo URL / File Upload / Real-time View)             │
+│                        USER DASHBOARD                               │
+│              (Repo URL / File Upload / Real-time View)              │
 └──────────────────────────────┬──────────────────────────────────────┘
                                │
                                ▼
@@ -288,6 +288,10 @@ cd GenAI-ET-hackathon
 ```bash
 cd backend
 npm install
+npm i express
+npm i nodemon
+npm i uuid
+npm i multer
 ```
 
 Create a `.env` file in the `backend/` directory:
@@ -300,7 +304,7 @@ WEBHOOK_SECRET=your_webhook_secret (for GitHub)
 
 Start the backend server:
 ```bash
-npm start
+npx nodemon index.js
 ```
 
 You should see:
@@ -351,7 +355,7 @@ Navigate to `http://localhost:3000` in your browser.
 
 | Feature | Description |
 |---|---|
-| 🤖 **95%+ Autonomous** | No human intervention needed — webhooks trigger → fixes applied → code pushed |
+| 🤖 **70% Autonomous** | No human intervention needed — webhooks trigger → fixes applied → code pushed |
 | 🔗 **GitHub Webhook Integration** | Auto-triggers on code push, pull requests, and releases |
 | ⏰ **Background Job Scheduling** | Continuous monitoring every 30 min, hourly, or on custom schedule |
 | ⚡ **Autonomous Fix Application** | AI-generated fixes are automatically applied to source files (NEW!) |
@@ -372,7 +376,7 @@ Our solution is designed to excel across all evaluation dimensions:
 
 | Criterion | How We Address It |
 |---|---|
-| **Depth of Autonomy** | ✅ **95%+ autonomous** — Webhooks trigger → Analysis runs → Fixes applied → Code committed & pushed (only setup is one-time webhook config) |
+| **Depth of Autonomy** | ✅ **70% autonomous** — Webhooks trigger → Analysis runs → Fixes applied → Code committed & pushed (only setup is one-time webhook config) |
 | **Error Recovery** | ✅ **Multi-layer recovery** — Verifier catches false positives, Monitor detects failures, Scheduler retries, logging tracks all issues |
 | **Auditability** | ✅ **Complete audit trail** — Every step timestamped (agent transition, decision reasoning, fix applied, commit hash, push status) |
 | **Real-World Applicability** | ✅ **Production-ready** — GitHub integration, git-based deployment, scheduled jobs, security-first design (token handling, signature verification) |
@@ -390,6 +394,6 @@ Manual: 0-1 (optional GitHub webhook config)
 
 <div align="center">
 
-### Built with ❤️ for the GenAI Hackathon by **Team SLYTHERIN**
+### Built with ❤️ for the GenAI Hackathon by Team ** SLYTHERIN **
 
 </div>
