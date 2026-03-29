@@ -385,8 +385,8 @@ Our solution is designed to excel across all evaluation dimensions:
 
 ```
 Total Steps: 10
-Automated: 9-10 (depending on setup)
-Manual: 0-1 (optional GitHub webhook config)
+Automated: 6-7 (depending on setup)
+Manual: 3-4 (optional GitHub webhook config)
 → Autonomy: 65-70%
 ```
 
