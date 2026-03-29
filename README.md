@@ -12,7 +12,7 @@
 
 ---
 
-*An autonomous multi-agent system that takes ownership of complex, multi-step enterprise code review and remediation processes — detecting failures, self-correcting, executing fixes, and deploying changes with 95%+ autonomy while maintaining an auditable trail of every decision it makes.*
+*An autonomous multi-agent system that takes ownership of complex, multi-step enterprise code review and remediation processes — detecting failures, self-correcting, executing fixes, and deploying changes with 70% autonomy while maintaining an auditable trail of every decision it makes.*
 
 </div>
 
@@ -387,7 +387,7 @@ Our solution is designed to excel across all evaluation dimensions:
 Total Steps: 10
 Automated: 9-10 (depending on setup)
 Manual: 0-1 (optional GitHub webhook config)
-→ Autonomy: 90-100%
+→ Autonomy: 65-70%
 ```
 
 ---
