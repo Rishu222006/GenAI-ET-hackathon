@@ -8,7 +8,12 @@ exports.runAgents = async (req, res) => {
 
         res.json({
             success: true,
-            tasks: result
+            summary: `Agent pipeline completed for ${repoUrl || "repository"}`,
+            overallStatus: {
+                tasksFound: result.length,
+                completed: true,
+            },
+            tasks: result,
         });
 
     } catch (err) {
