@@ -34,7 +34,7 @@
 
 ## 🎯 Problem Statement
 
-> **Design a multi-agent system that takes ownership of a complex, multi-step enterprise process.** It should detect failures, self-correct, and complete the job with minimal human involvement — while keeping an auditable trail of every decision it makes.
+> **Design a multi-agent system that takes ownership of a complex, multi-step enterprise process.** It should detect failures, self-correct, and complete the job with minimal human involvement, while keeping an auditable trail of every decision it makes.
 
 We were challenged to build one of the following:
 
@@ -49,7 +49,7 @@ We were challenged to build one of the following:
 
 ## 💡 Our Solution
 
-We built an **Autonomous Multi-Agent AI Code Intelligence & Remediation Platform** — an enterprise-grade system where **six specialized AI agents** collaborate autonomously to analyze codebases, detect vulnerabilities, prioritize issues, **generate and apply fixes**, and verify solutions — all without human intervention. Plus, it **automatically commits and pushes** changes back to your repository.
+We built an **Autonomous Multi-Agent AI Code Intelligence & Remediation Platform** — an enterprise-grade system where **six specialized AI agents** collaborate autonomously to analyze codebases, detect vulnerabilities, prioritize issues, **generate and apply fixes**, and verify solutions all without human intervention. Plus, it **automatically commits and pushes** changes back to your repository.
 
 Think of it as a **self-healing code review system** where:
 - 🔍 **Retriever Agent** fetches your code
@@ -122,7 +122,7 @@ Our system is powered by **six specialized agents**, each with a distinct role i
 | Agent | Role | Responsibility |
 |---|---|---|
 | 🔍 **Retriever Agent** | Data Retrieval | Traverses the provided GitHub repository URL or uploaded files, fetches source code, and prepares it for downstream analysis |
-| 🧪 **Analyzer Agent** | Intelligence | Leverages **Google Gemini AI** to perform deep code analysis — identifying security vulnerabilities, performance bottlenecks, code smells, and quality issues |
+| 🧪 **Analyzer Agent** | Intelligence | Leverages **Google Gemini AI** to perform deep code analysis: identifying security vulnerabilities, performance bottlenecks, code smells, and quality issues |
 | ⚖️ **Decision Agent** | Decision-Making | Evaluates findings from the Analyzer, assigns severity scores (Critical / High / Medium / Low), and prioritizes them into an actionable task queue |
 | ⚡ **Execution Agent** | Action | Develops implementation strategies and generates detailed, context-aware fix plans for each identified issue |
 | ✅ **Verifier Agent** | Verification | Validates that identified issues are legitimate (reducing false positives) and that proposed solutions are sound and won't introduce regressions |
@@ -355,13 +355,13 @@ Navigate to `http://localhost:3000` in your browser.
 
 | Feature | Description |
 |---|---|
-| 🤖 **70% Autonomous** | No human intervention needed — webhooks trigger → fixes applied → code pushed |
+| 🤖 **70% Autonomous** | No human intervention needed webhooks trigger → fixes applied → code pushed |
 | 🔗 **GitHub Webhook Integration** | Auto-triggers on code push, pull requests, and releases |
 | ⏰ **Background Job Scheduling** | Continuous monitoring every 30 min, hourly, or on custom schedule |
 | ⚡ **Autonomous Fix Application** | AI-generated fixes are automatically applied to source files (NEW!) |
 | 📤 **Auto-Commit & Push** | Fixed code automatically committed with descriptive messages and pushed (NEW!) |
 | 🧠 **AI-Powered Analysis** | Google Gemini performs deep semantic code understanding |
-| 📝 **Full Audit Trail** | Every decision, every action, every modification — complete trace for compliance |
+| 📝 **Full Audit Trail** | Every decision, every action, every modification complete trace for compliance |
 | ✅ **Self-Correcting Loop** | Verifier catches issues, Monitor detects failures, system auto-recovers |
 | 📊 **Real-time Monitoring** | Live visualization of agent status, task progress, workflow health |
 | 🔄 **Flexible Input** | GitHub URLs, file uploads, or webhook auto-triggers |
