@@ -24,19 +24,41 @@ function extractTextFromGeminiResponse(geminiResponse) {
 
 function parseAnalysisText(text) {
     try {
-        // Remove "json" prefix if it exists
-        let cleanedText = text.replace(/^json\s*/i, "").trim();
+        // Handle cases where text may include leading abstract content before actual JSON.
+        const jsonStartIndex = text.indexOf("json");
+        let cleanedText = text;
 
-        // Remove markdown code blocks (```json ... ```)
-        cleanedText = cleanedText.replace(/^```(json)?\n?/i, "").replace(/\n?```$/i, "").trim();
+        if (jsonStartIndex !== -1) {
+            cleanedText = text.slice(jsonStartIndex).replace(/^json\s*/i, "").trim();
+        }
 
-        // Try to parse as JSON
+        // Strip markdown JSON blocks
+        cleanedText = cleanedText.replace(/^```(json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+        // If this is raw data with leading context, attempt to extract first JSON object found.
+        const objectMatch = cleanedText.match(/\{[\s\S]*\}/);
+        if (objectMatch) {
+            cleanedText = objectMatch[0];
+        }
+
         const parsed = JSON.parse(cleanedText);
         return parsed;
     } catch (e) {
-        console.error("JSON parse error:", e.message, "Text:", text.substring(0, 100));
-        // If not JSON, return the text as is
-        return { summary: text };
+        console.error("JSON parse error:", e.message, "Text:", text.substring(0, 200));
+
+        // If typical cleaning didn't work, attempt robust failure fallback.
+        // Try to find a JSON object substring and parse again.
+        try {
+            const fallbackObjectMatch = text.match(/\{[\s\S]*\}/);
+            if (fallbackObjectMatch) {
+                return JSON.parse(fallbackObjectMatch[0]);
+            }
+        } catch (innerErr) {
+            console.error("Fallback parse failed:", innerErr.message);
+        }
+
+        // If not JSON, return the raw text as summary.
+        return { summary: text.trim() };
     }
 }
 
